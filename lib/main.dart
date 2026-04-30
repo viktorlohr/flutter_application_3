@@ -228,6 +228,44 @@ class _TopicCard extends StatelessWidget {
 
 // ─── FLASHCARD SCREEN ─────────────────────────────────────────────────────────
 
+// ─── FLASHCARD SCREEN ─────────────────────────────────────────────────────────
+
+// Define the card pools outside the class
+const Map<String, List<Map<String, String>>> topicCards = {
+  'Analysis': [
+    {
+      'question': 'Was ist die Ableitung von f(x) = x²?',
+      'answer': r"f'(x) = 2x",
+    },
+  ],
+  'Geometrie': [
+    {
+      'question': 'Wie lautet die Formel für die Kreisfläche?',
+      'answer': r'A = \pi r^2',
+    },
+  ],
+  'Stochastik': [
+    {
+      'question': 'Was ist die Formel für die Wahrscheinlichkeit?',
+      'answer': r'P(A) = \frac{günst}{mögl}',
+    },
+  ],
+  'Grundlagen': [
+    {
+      'question': 'Wie lautet der Satz des Pythagoras?',
+      'answer': r'a^2 + b^2 = c^2',
+    },
+  ],
+};
+
+List<Map<String, String>> getCardsForTopic(String topic) {
+  if (topic == 'Gemischt') {
+    // Combine all pools
+    return topicCards.values.expand((cards) => cards).toList();
+  }
+  return topicCards[topic] ?? [];
+}
+
 class FancyMathCards extends StatefulWidget {
   final String topic;
   const FancyMathCards({super.key, required this.topic});
@@ -240,6 +278,8 @@ class _FancyMathCardsState extends State<FancyMathCards>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late List<Map<String, String>> _cards;
+  int _currentIndex = 0;
   bool _isFront = true;
 
   final Color myBlue = const Color(0xFF264358);
@@ -248,6 +288,7 @@ class _FancyMathCardsState extends State<FancyMathCards>
   @override
   void initState() {
     super.initState();
+    _cards = getCardsForTopic(widget.topic);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -266,11 +307,21 @@ class _FancyMathCardsState extends State<FancyMathCards>
     _isFront = !_isFront;
   }
 
+  void _nextCard() {
+    setState(() {
+      _currentIndex = (_currentIndex + 1) % _cards.length;
+      _isFront = true;
+      _controller.reset();
+    });
+  }
+
   void _goHome(BuildContext context) =>
       Navigator.popUntil(context, (route) => route.isFirst);
 
   @override
   Widget build(BuildContext context) {
+    final card = _cards[_currentIndex];
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -290,68 +341,92 @@ class _FancyMathCardsState extends State<FancyMathCards>
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 24),
-          Text(
-            widget.topic,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: myBlue,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget.topic,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: myBlue,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Tippe auf die Karte zum Umdrehen',
-            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: _flipCard,
-            child: AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                final angle = _animation.value * pi;
-                return Transform(
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..rotateY(angle),
-                  alignment: Alignment.center,
-                  child: angle < pi / 2 ? _buildFront() : _buildBack(),
-                );
-              },
+            const SizedBox(height: 8),
+            Text(
+              'Tippe auf die Karte zum Umdrehen',
+              style: TextStyle(fontSize: 13, color: Colors.grey[600]),
             ),
-          ),
-          const Spacer(),
-        ],
+            const SizedBox(height: 32),
+            GestureDetector(
+              onTap: _flipCard,
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  final angle = _animation.value * pi;
+                  return Transform(
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.001)
+                      ..rotateY(angle),
+                    alignment: Alignment.center,
+                    child: angle < pi / 2
+                        ? _buildFront(card['question']!)
+                        : _buildBack(card['answer']!),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: _nextCard,
+              icon: const Icon(Icons.arrow_forward),
+              label: const Text(
+                'Nächste Karte',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: myBlue,
+                foregroundColor: myOrange,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 14,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildFront() {
+  Widget _buildFront(String question) {
     return _cardWrapper(
       backgroundColor: myBlue,
       child: Text(
-        "Wie lautet die Formel für die Kreisfläche?",
+        question,
         textAlign: TextAlign.center,
         style: TextStyle(
           color: myOrange,
-          fontSize: 26,
+          fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  Widget _buildBack() {
+  Widget _buildBack(String answer) {
     return Transform(
       transform: Matrix4.identity()..rotateY(pi),
       alignment: Alignment.center,
       child: _cardWrapper(
         backgroundColor: Colors.white,
         child: Math.tex(
-          r'{A = \pi r^2}',
+          answer,
           textStyle: TextStyle(fontSize: 40, color: myBlue),
         ),
       ),
