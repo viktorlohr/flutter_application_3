@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      // Keep the AppBar as is
       appBar: AppBar(
         title: Image.asset(
           'assets/images/akademus_logo.jpg',
@@ -26,49 +26,71 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: myOrange,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Willkommen!',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: myBlue,
+      body: Stack(
+        children: [
+          // 1. The Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/background_female.jpg',
+                ), // Replace with your path
+                fit: BoxFit.cover, // This makes it fill the whole screen
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              'Was möchtest du heute lernen?',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 48),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const TopicSelectionScreen()),
-              ),
-              icon: const Icon(Icons.style_outlined),
-              label: const Text(
-                'Mathe Karteikarten',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: myBlue,
-                foregroundColor: myOrange,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+          ),
+
+          // 2. An optional Overlay (to make text more readable)
+          Container(color: Colors.white.withOpacity(0.8)),
+
+          // 3. Your Original Content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Willkommen!',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: myBlue,
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                const SizedBox(height: 12),
+                Text(
+                  'Was möchtest du heute lernen?',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[800]),
                 ),
-                elevation: 6,
-              ),
+                const SizedBox(height: 48),
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TopicSelectionScreen(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.style_outlined),
+                  label: const Text(
+                    'Mathe Karteikarten',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: myBlue,
+                    foregroundColor: myOrange,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 6,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -735,14 +757,14 @@ class StatsScreen extends StatelessWidget {
         foregroundColor: myOrange,
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // ── Header ──
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
                 color: myBlue,
                 borderRadius: BorderRadius.circular(24),
@@ -756,30 +778,30 @@ class StatsScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text(_emoji, style: const TextStyle(fontSize: 52)),
-                  const SizedBox(height: 8),
+                  Text(_emoji, style: const TextStyle(fontSize: 42)),
+                  const SizedBox(height: 6),
                   Text(
                     'Sitzung abgeschlossen!',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: myOrange,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     topic,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       color: Colors.white.withOpacity(0.8),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   Text(
                     _message,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       color: Colors.white.withOpacity(0.9),
                       fontStyle: FontStyle.italic,
                     ),
@@ -788,11 +810,11 @@ class StatsScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
 
-            // ── Progress Arc / Bar ──
+            // ── Progress Bar ──
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -802,17 +824,17 @@ class StatsScreen extends StatelessWidget {
                   Text(
                     '${(knownPct * 100).round()}% gewusst',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: myBlue,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
                       value: knownPct,
-                      minHeight: 14,
+                      minHeight: 12,
                       backgroundColor: myRed.withOpacity(0.2),
                       valueColor: AlwaysStoppedAnimation<Color>(myGreen),
                     ),
@@ -821,7 +843,7 @@ class StatsScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
             // ── Stat Cards ──
             Row(
@@ -834,7 +856,7 @@ class StatsScreen extends StatelessWidget {
                     color: myGreen,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: _StatCard(
                     icon: Icons.cancel,
@@ -846,7 +868,7 @@ class StatsScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             Row(
               children: [
@@ -858,7 +880,7 @@ class StatsScreen extends StatelessWidget {
                     color: myBlue,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: _StatCard(
                     icon: Icons.local_fire_department,
@@ -870,7 +892,7 @@ class StatsScreen extends StatelessWidget {
               ],
             ),
 
-            const Spacer(),
+            const SizedBox(height: 20),
 
             // ── Actions ──
             ElevatedButton.icon(
@@ -893,7 +915,7 @@ class StatsScreen extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () => _goHome(context),
               icon: const Icon(Icons.home),
