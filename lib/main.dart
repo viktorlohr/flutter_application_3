@@ -998,7 +998,7 @@ class _StatCard extends StatelessWidget {
 class MenuButton extends StatelessWidget {
   final String label;
   final IconData icon;
-  final Widget destination; // This stores the screen you want to go to
+  final Widget destination;
 
   const MenuButton({
     super.key,
@@ -1009,29 +1009,33 @@ class MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We define your brand colors here once so they aren't arguments
+    // Branding colors defined once here
     const Color myBlue = Color(0xFF264358);
     const Color myOrange = Color(0xFFF5AC26);
 
-    return ElevatedButton.icon(
-      onPressed: () {
-        // Boilerplate is hidden here! You never write this again.
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => destination),
-        );
-      },
-      icon: Icon(icon),
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: myBlue,
-        foregroundColor: myOrange,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 6,
+    return Center(
+      // This ensures every instance is centered by default
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => destination),
+          );
+        },
+        icon: Icon(icon),
+        label: Text(
+          label,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: myBlue,
+          foregroundColor: myOrange,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 6,
+        ),
       ),
     );
   }
