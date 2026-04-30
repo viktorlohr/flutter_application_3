@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(const MaterialApp(home: HomeScreen()));
 
@@ -144,7 +145,9 @@ const Map<String, List<Map<String, String>>> topicCards = {
         &\textbf{Polstellen} \\[6pt]
 
         &\text{Eine Polstelle liegt bei } x_0, \\
-        &\text{wenn der Nenner } = 0 \text{ und der Zähler } \neq 0. \\[6pt]
+        &\text{wenn der Nenner gegen 0}  \\
+        &\text{und der Zähler bei } x_0 . \\
+        &\text{ungleich null ist. }\\[6pt]
 
         &f(x) = \frac{p(x)}{q(x)}, \quad
         q(x_0) = 0,\; p(x_0) \neq 0 \\[10pt]
@@ -169,6 +172,7 @@ const Map<String, List<Map<String, String>>> topicCards = {
 
         \end{aligned}
         ''',
+      'image': 'assets/images/tikz/polstellen_test.svg',
     },
     {
       'question': r'\text{Was ist die Ableitung von } f(x) = x^2?',
@@ -547,9 +551,17 @@ class _FancyMathCardsState extends State<FancyMathCards>
                     color: Color(0xFF264358),
                   ),
                 ),
+                // In main.dart, inside the _buildBack method
                 if (imagePath != null) ...[
                   const SizedBox(height: 16),
-                  Image.asset(imagePath, fit: BoxFit.contain),
+                  // Check if the file is an SVG
+                  imagePath.endsWith('.svg')
+                      ? SvgPicture.asset(
+                          imagePath,
+                          fit: BoxFit.contain,
+                          height: 150, // You can adjust the height as needed
+                        )
+                      : Image.asset(imagePath, fit: BoxFit.contain),
                 ],
               ],
             ),
