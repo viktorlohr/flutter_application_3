@@ -246,8 +246,9 @@ const Map<String, List<Map<String, String>>> topicCards = {
   ],
   'Stochastik': [
     {
-      'question': 'Was ist die Formel für die Wahrscheinlichkeit?',
-      'answer': r'P(A) = \frac{günst}{mögl}',
+      'question':
+          'Was ist die Wahrscheinlichkeit eines Ereignisses A in einem Laplace-Experiment?',
+      'answer': r'P(A) = \frac{\text{günstig}}{\text{möglich}}',
     },
   ],
   'Grundlagen': [
@@ -427,7 +428,7 @@ class _FancyMathCardsState extends State<FancyMathCards>
         backgroundColor: Colors.white,
         child: Math.tex(
           answer,
-          textStyle: TextStyle(fontSize: 40, color: myBlue),
+          textStyle: TextStyle(fontSize: 30, color: myBlue),
         ),
       ),
     );
