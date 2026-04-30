@@ -18,8 +18,8 @@ class _FancyMathCardsState extends State<FancyMathCards>
   bool _isFront = true;
 
   // Define our color palette
-  final Color navyBlue = const Color(0xFF000080);
-  final Color highlightOrange = Colors.orange;
+  final Color myBlue = const Color(0xFF264358);
+  final Color myOrange = const Color(0xFFF5AC26);
 
   @override
   void initState() {
@@ -49,9 +49,22 @@ class _FancyMathCardsState extends State<FancyMathCards>
       backgroundColor:
           Colors.grey[300], // Slightly darker background to make white card pop
       appBar: AppBar(
-        title: const Text("Math Flashcards"),
-        backgroundColor: navyBlue,
-        foregroundColor: Colors.white,
+        title: GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          },
+          child: Image.asset(
+            'assets/images/akademus_logo.jpg',
+            height: 80,
+            fit: BoxFit.contain,
+          ),
+        ),
+        toolbarHeight: 100,
+        backgroundColor: Colors.white, // White background to match the logo
+        foregroundColor: myOrange,
       ),
       body: Center(
         child: GestureDetector(
@@ -77,11 +90,12 @@ class _FancyMathCardsState extends State<FancyMathCards>
 
   Widget _buildFront() {
     return _cardWrapper(
-      backgroundColor: navyBlue, // Navy Blue Background
+      backgroundColor: myBlue, // Navy Blue Background
       child: Text(
-        "Area of a Circle",
+        "Wie lautet die Formel für die Kreisfläche?",
+        textAlign: TextAlign.center,
         style: TextStyle(
-          color: highlightOrange, // Orange Font
+          color: myOrange, // Orange Font
           fontSize: 26,
           fontWeight: FontWeight.bold,
         ),
@@ -98,8 +112,8 @@ class _FancyMathCardsState extends State<FancyMathCards>
         backgroundColor: Colors.white, // White Background
         child: Math.tex(
           // Use Navy Blue for the math symbols
-          r'\color{#000080}{A = \pi r^2}',
-          textStyle: const TextStyle(fontSize: 40),
+          r'{A = \pi r^2}',
+          textStyle: TextStyle(fontSize: 40, color: myBlue),
         ),
       ),
     );
@@ -130,5 +144,17 @@ class _FancyMathCardsState extends State<FancyMathCards>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Home")),
+      body: const Center(child: Text("Welcome to Akademus!")),
+    );
   }
 }
